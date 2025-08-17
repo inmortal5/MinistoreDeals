@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Dibiujos xxx - Creaciones</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Estilos Generales */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #eaeded;
+            color: #191;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Encabezado/Barra de Navegación */
+        .navbar {
+            background-color: #137791;
+            color: #ff9;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 50px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            font-weight: bold;
+            font-size: 24px;
+            margin-right: 20px;
+            white-space: nowrap;
+        }
+
+        .location-picker {
+            display: flex;
+            align-items: center;
+            font-size: 0.9em;
+            cursor: pointer;
+            padding: 5px 10px;
+            border: 1px solid transparent;
+            border-radius: 3px;
+            white-space: nowrap;
+        }
+
+        .location-picker:hover {
+            border: 1px solid #9ff;
+        }
+
+        .location-picker i {
+            margin-right: 5px;
+        }
+
+        .nav-search {
+            flex-grow: 1;
+            display: flex;
+            margin: 0 15px;
+            min-width: 200px;
+        }
+
+        .nav-search input {
+            flex-grow: 1;
+            padding: 8px 10px;
+            border: none;
+            border-radius: 4px 0 0 4px;
+            outline: none;
+            font-size: 1em;
+        }
+
+        .nav-search button {
+            background-color: #feb969;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-search button i {
+            color: #131021;
+            font-size: 1.2em;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-shrink: 0;
+        }
+
+        .nav-right a {
+            font-size: 0.9em;
+            padding: 5px 10px;
+            border: 1px solid transparent;
+            border-radius: 3px;
+            white-space: nowrap;
+        }
+
+        .nav-right a:hover {
+            border: 1px solid #fff;
+        }
+
+        .cart { /* Ahora "interacciones" */
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .cart-count { /* Conteo de interacciones */
+            background-color: #f08804;
+            color: #131921;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.7em;
+            position: absolute;
+            top: -5px;
+            right: -10px;
+            min-width: 15px;
+            text-align: center;
+        }
+
+        /* Navegación Secundaria */
+        .nav-secondary {
+            background-color: #232f3e;
+            color: #fff;
+            padding: 8px 20px;
+        }
+
+        .nav-secondary ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-secondary ul li a {
+            font-size: 0.85em;
+            padding: 5px 0;
+            border: 1px solid transparent;
+            border-radius: 3px;
+        }
+
+        .nav-secondary ul li a:hover {
+            border: 1px solid #fff;
+        }
+
+        /* Contenido Principal */
+        .main-content {
+            padding: 20px;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .hero-section {
+            background-image: url('https://i.ibb.co/R4dh6jkd/124-sin-t-tulo-20250615142808.png'); /* Nueva imagen hero */
+            background-size: cover;
+            background-position: center;
+            color: #fff;
+            text-align: center;
+            padding: 80px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 0;
+        }
+
+        .hero-section > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-section h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-section p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .shop-now-btn { /* Ahora "Explorar Creaciones" */
+            background-color: #f0c14b;
+            color: #111;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .shop-now-btn:hover {
+            background-color: #e4b233;
+        }
+
+        .product-grid { /* Ahora "Rejilla de Creaciones" */
+            margin-bottom: 30px;
+        }
+
+        .product-grid h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #333;
+        }
+
+        .products-container { /* Contenedor de creaciones */
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card { /* Tarjeta de creación */
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-card img {
+            max-width: 100%;
+            height: 180px; /* Altura fija para las imágenes */
+            object-fit: contain; /* Para que la imagen se ajuste sin cortarse */
+            margin-bottom: 10px;
+            align-self: center;
+            background-color: #f8f8f8; /* Un fondo claro para imágenes transparentes */
+            border-radius: 4px;
+        }
+
+        .product-card h3 {
+            font-size: 1.1em;
+            margin-bottom: 5px;
+            height: 2.8em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            color: #007185;
+        }
+
+        .product-card h3:hover {
+            color: #c45500;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .product-card .artist { /* Nuevo estilo para el artista */
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .product-card .add-to-cart-btn { /* Ahora "Ver Detalle" */
+            background-color: #3b73b2; /* Color azul */
+            color: #fff;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: auto; /* Empuja el botón hacia abajo */
+        }
+
+        .product-card .add-to-cart-btn:hover {
+            background-color: #2a5a8e; /* Azul más oscuro al pasar el ratón */
+        }
+
+        .ad-banner {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .ad-banner img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Pie de página */
+        .footer {
+            background-color: #232f3e;
+            color: #ddd;
+            padding: 40px 20px;
+            font-size: 0.9em;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .footer-links div {
+            margin: 15px;
+            min-width: 150px;
+        }
+
+        .footer-links h3 {
+            color: #fff;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .footer-links ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links ul li {
+            margin-bottom: 8px;
+        }
+
+        .footer-links ul li a {
+            color: #ddd;
+            transition: color 0.2s;
+        }
+
+        .footer-links ul li a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            border-top: 1px solid #3a4553;
+            padding-top: 20px;
+            color: #aaa;
+            font-size: 0.85em;
+        }
+
+        /* Ajustes Responsivos */
+        @media (max-width: 900px) {
+            .navbar {
+                justify-content: center;
+            }
+            .nav-search {
+                order: 3;
+                width: 100%;
+                margin-top: 10px;
+                margin-left: 0;
+                margin-right: 0;
+            }
+            .nav-left, .nav-right {
+                margin-bottom: 0;
+            }
+            .nav-secondary ul {
+                justify-content: center;
+            }
+            .hero-section {
+                padding: 60px 15px;
+            }
+            .hero-section h1 {
+                font-size: 2.5em;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .navbar {
+                padding: 10px 15px;
+            }
+            .logo {
+                font-size: 20px;
+                margin-right: 10px;
+            }
+            .nav-right {
+                gap: 15px;
+            }
+            .hero-section h1 {
+                font-size: 2em;
+            }
+            .hero-section p {
+                font-size: 1em;
+            }
+            .product-grid h2 {
+                font-size: 1.7em;
+            }
+            .footer-links {
+                justify-content: flex-start;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+            .footer-links div {
+                min-width: unset;
+                flex-basis: 45%;
+            }
+            .footer {
+                padding: 30px 15px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .nav-right {
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 5px;
+            }
+            .nav-right a {
+                padding: 3px 5px;
+            }
+            .nav-secondary ul {
+                gap: 10px;
+            }
+            .footer-links div {
+                flex-basis: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-left">
+            <a href="#" class="logo">Dibujos xxx</a>
+            <div class="location-picker">
+                <i class="fas fa-palette"></i> <span>Desde</span>
+                <b>Guatemala</b>
+            </div>
+        </div>
+        <div class="nav-search">
+            <input type="text" placeholder="Buscar creaciones...">
+            <button><i class="fas fa-search"></i></button>
+        </div>
+        <div class="nav-right">
+            <a href="#">Hola, Iniciar Sesión</a>
+            <a href="#">Mis Obras</a>
+            <a href="#" class="cart">
+                <i class="fas fa-eye"></i> <span>Vistas</span>
+                <span class="cart-count">0</span>
+            </a>
+        </div>
+    </header>
+
+    <div class="nav-secondary">
+        <ul>
+            <li><a href="#"></a></li>
+            <li><a href="#"></a></li>
+            <li><a href="#"></a></li>
+            <li><a href="#"></a></li>
+            <li><a href="#"></a></li>
+            <li><a href="#"></a></li>
+        </ul>
+    </div>
+
+    <main class="main-content">
+        <section class="hero-section">
+            <h1>¡Bienvenido a Mi Comunidad de Dibujo!</h1>
+            <p>Explora un universo de creatividad y comparte tu arte.</p>
+            <button class="shop-now-btn">Explorar Creaciones</button>
+        </section>
+
+        <section class="product-grid">
+            <h2>Creaciones Destacadas</h2>
+            <div class="products-container" id="productsContainer">
+                </div>
+        </section>
+
+        <section class="ad-banner">
+            <img src="https://via.placeholder.com/1200x200?text=Participa+en+nuestro+próximo+concurso+de+dibujo" alt="Banner de Concurso">
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <div>
+                <h3>Conócenos</h3>
+                <ul>
+                    <li><a href="#">Acerca de Nosotros</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Principios de la Comunidad</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3>Colabora con Nosotros</h3>
+                <ul>
+                    <li><a href="#">Conviértete en Moderador</a></li>
+                    <li><a href="#">Patrocina un Concurso</a></li>
+                    <li><a href="#">Publicita tu Material de Arte</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3>Recursos para Artistas</h3>
+                <ul>
+                    <li><a href="#">Tutoriales Gratuitos</a></li>
+                    <li><a href="#">Herramientas Recomendadas</a></li>
+                    <li><a href="#">Eventos y Talleres</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3>Necesitas Ayuda</h3>
+                <ul>
+                    <li><a href="#">Tu Perfil</a></li>
+                    <li><a href="#">Tus Publicaciones</a></li>
+                    <li><a href="#">Soporte Técnico</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023-2025 Mi Comunidad de Dibujo, Inc. o sus afiliados</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const productsContainer = document.getElementById('productsContainer');
+            const cartCountSpan = document.querySelector('.cart-count'); // Ahora para "Vistas"
+            let interactionCount = 0; // Conteo de interacciones
+
+            // Simular datos de creaciones (¡aquí puedes añadir tus enlaces de imagen!)
+            const creations = [
+                { id: 1, name: 'semi humana gata', artist: 'inmortal Dibujante', image: 'https://i.ibb.co/R4dh6jkd/124-sin-t-tulo-20250615142808.png' },
+                { id: 2, name: 'dibujo de lulili', artist: 'inmortal', image: 'https://i.ibb.co/FbGQX3Yv/58-sin-t-tulo-20250508225656.png' },
+                { id: 3, name: 'Ilustración Digital Fantasía', artist: 'Clara Creacionista', image: 'https://cdn.pixabay.com/photo/2016/11/29/05/45/art-1867175_1280.jpg' },
+                { id: 4, name: 'Mural Abstracto Geométrico', artist: 'David Artístico', image: 'https://cdn.pixabay.com/photo/2017/07/21/23/57/abstract-2527966_1280.jpg' },
+                { id: 5, name: 'Diseño de Personaje Anime', artist: 'Elena Dibujante', image: 'https://cdn.pixabay.com/photo/2017/09/27/15/43/anime-2792978_1280.jpg' },
+                { id: 6, name: 'Bodegón Óleo Realista', artist: 'Felipe Maestro', image: 'https://cdn.pixabay.com/photo/2016/09/01/10/24/paint-1635811_1280.jpg' },
+                { id: 7, name: 'Cómic: Aventura Espacial', artist: 'Gloria Narrativa', image: 'https://cdn.pixabay.com/photo/2017/03/13/11/24/art-2139626_1280.jpg' },
+                { id: 8, name: 'Arte Callejero Gráfico', artist: 'Hector Urbano', image: 'https://cdn.pixabay.com/photo/2017/01/22/19/31/street-art-1999971_1280.jpg' },
+                { id: 9, name: 'Flor en Pastel Seco', artist: 'Isabel Delicada', image: 'https://cdn.pixabay.com/photo/2016/08/04/16/27/drawing-1569420_1280.jpg' },
+                { id: 10, name: 'Boceto Rápido a Lápiz', artist: 'Juan Curioso', image: 'https://cdn.pixabay.com/photo/2014/12/28/15/07/drawing-582121_1280.jpg' },
+            ];
+
+            // Función para renderizar las creaciones
+            function renderCreations() {
+                productsContainer.innerHTML = ''; // Limpiar creaciones existentes
+                creations.forEach(creation => {
+                    const productCard = document.createElement('div');
+                    productCard.classList.add('product-card');
+                    productCard.innerHTML = `
+                        <img src="${creation.image}" alt="Obra de ${creation.name}">
+                        <h3>${creation.name}</h3>
+                        <p class="artist">Artista: ${creation.artist}</p>
+                        <button class="add-to-cart-btn" data-creation-id="${creation.id}">Ver Detalle</button>
+                    `;
+                    productsContainer.appendChild(productCard);
+                });
+            }
+
+            // Función para manejar la interacción (simulando "Ver Detalle")
+            function handleInteraction(creationId) {
+                interactionCount++;
+                cartCountSpan.textContent = interactionCount;
+                console.log(`¡Detalle de la creación ${creationId} visto! Total de vistas: ${interactionCount}`);
+                alert(`¡Has visto el detalle de la obra "${creations.find(c => c.id == creationId).name}"! Imagina que aquí verías más info.`);
+            }
+
+            // Delegación de eventos para los botones "Ver Detalle"
+            productsContainer.addEventListener('click', (event) => {
+                if (event.target.classList.contains('add-to-cart-btn')) {
+                    const creationId = event.target.dataset.creationId;
+                    handleInteraction(creationId);
+                }
+                // También puedes hacer que al hacer clic en el título o la imagen se vea el detalle
+                if (event.target.tagName === 'IMG' || event.target.tagName === 'H3') {
+                     // Busca el ancestro más cercano que sea un product-card
+                    const card = event.target.closest('.product-card');
+                    if (card) {
+                        const button = card.querySelector('.add-to-cart-btn');
+                        if (button) {
+                            handleInteraction(button.dataset.creationId);
+                        }
+                    }
+                }
+            });
+
+
+            // Renderizado inicial de las creaciones al cargar la página
+            renderCreations();
+
+            // Ejemplo de elemento interactivo simple: botón de la sección hero
+            const shopNowBtn = document.querySelector('.shop-now-btn');
+            if (shopNowBtn) {
+                shopNowBtn.addEventListener('click', () => {
+                    alert('¡Explorando la galería de arte!');
+                    // En una aplicación real, navegarías a una sección específica
+                    // window.location.href = '#product-grid';
+                });
+            }
+
+            // Ejemplo de funcionalidad de búsqueda (muy básica)
+            const searchInput = document.querySelector('.nav-search input');
+            const searchButton = document.querySelector('.nav-search button');
+
+            searchButton.addEventListener('click', () => {
+                const searchTerm = searchInput.value.trim().toLowerCase();
+                if (searchTerm) {
+                    alert(`¡Buscando creaciones con: "${searchTerm}"!`);
+                    // En una aplicación real, filtrarías las creaciones o harías una llamada a una API
+                } else {
+                    alert('Por favor, ingresa un término de búsqueda.');
+                }
+            });
+
+            searchInput.addEventListener('keypress', (event) => {
+                if (event.key === 'Enter') {
+                    searchButton.click(); // Disparar clic del botón de búsqueda al presionar Enter
+                }
+            });
+        });
+    </script>
+</body>
+</html>
