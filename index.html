@@ -1,651 +1,974 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
+    <title>Tienda 3D: Estantes con Productos Únicos</title>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Dibiujos xxx - Creaciones</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Estilos Generales */
-        body {
-            font-family: Arial, sans-serif;
+        /* Estilos Generales para el Cuerpo y el Canvas */
+        html, body {
             margin: 0;
             padding: 0;
-            background-color: #eaeded;
-            color: #191;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        /* Encabezado/Barra de Navegación */
-        .navbar {
-            background-color: #137791;
-            color: #ff9;
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            min-height: 50px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .nav-left {
-            display: flex;
-            align-items: center;
-            flex-shrink: 0;
-        }
-
-        .logo {
-            font-weight: bold;
-            font-size: 24px;
-            margin-right: 20px;
-            white-space: nowrap;
-        }
-
-        .location-picker {
-            display: flex;
-            align-items: center;
-            font-size: 0.9em;
-            cursor: pointer;
-            padding: 5px 10px;
-            border: 1px solid transparent;
-            border-radius: 3px;
-            white-space: nowrap;
-        }
-
-        .location-picker:hover {
-            border: 1px solid #9ff;
-        }
-
-        .location-picker i {
-            margin-right: 5px;
-        }
-
-        .nav-search {
-            flex-grow: 1;
-            display: flex;
-            margin: 0 15px;
-            min-width: 200px;
-        }
-
-        .nav-search input {
-            flex-grow: 1;
-            padding: 8px 10px;
-            border: none;
-            border-radius: 4px 0 0 4px;
-            outline: none;
-            font-size: 1em;
-        }
-
-        .nav-search button {
-            background-color: #feb969;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 0 4px 4px 0;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .nav-search button i {
-            color: #131021;
-            font-size: 1.2em;
-        }
-
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            flex-shrink: 0;
-        }
-
-        .nav-right a {
-            font-size: 0.9em;
-            padding: 5px 10px;
-            border: 1px solid transparent;
-            border-radius: 3px;
-            white-space: nowrap;
-        }
-
-        .nav-right a:hover {
-            border: 1px solid #fff;
-        }
-
-        .cart { /* Ahora "interacciones" */
-            display: flex;
-            align-items: center;
-            position: relative;
-        }
-
-        .cart-count { /* Conteo de interacciones */
-            background-color: #f08804;
-            color: #131921;
-            border-radius: 50%;
-            padding: 2px 6px;
-            font-size: 0.7em;
-            position: absolute;
-            top: -5px;
-            right: -10px;
-            min-width: 15px;
-            text-align: center;
-        }
-
-        /* Navegación Secundaria */
-        .nav-secondary {
-            background-color: #232f3e;
-            color: #fff;
-            padding: 8px 20px;
-        }
-
-        .nav-secondary ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .nav-secondary ul li a {
-            font-size: 0.85em;
-            padding: 5px 0;
-            border: 1px solid transparent;
-            border-radius: 3px;
-        }
-
-        .nav-secondary ul li a:hover {
-            border: 1px solid #fff;
-        }
-
-        /* Contenido Principal */
-        .main-content {
-            padding: 20px;
-            max-width: 1300px;
-            margin: 0 auto;
-        }
-
-        .hero-section {
-            background-image: url('https://i.ibb.co/R4dh6jkd/124-sin-t-tulo-20250615142808.png'); /* Nueva imagen hero */
-            background-size: cover;
-            background-position: center;
-            color: #fff;
-            text-align: center;
-            padding: 80px 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            position: relative;
             overflow: hidden;
+            width: 100%;
+            height: 100%;
+        }
+        canvas {
+            display: block;
         }
 
-        .hero-section::before {
-            content: "";
-            position: absolute;
+        /* --- Estilos de las Ventanas Emergentes --- */
+
+        /* Estilo general para los pop-ups que cubren toda la pantalla */
+        #welcome-popup {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.3);
-            z-index: 0;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
         }
 
-        .hero-section > * {
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero-section h1 {
-            font-size: 3em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
-
-        .hero-section p {
-            font-size: 1.2em;
-            margin-bottom: 20px;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-        }
-
-        .shop-now-btn { /* Ahora "Explorar Creaciones" */
-            background-color: #f0c14b;
-            color: #111;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 4px;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .shop-now-btn:hover {
-            background-color: #e4b233;
-        }
-
-        .product-grid { /* Ahora "Rejilla de Creaciones" */
-            margin-bottom: 30px;
-        }
-
-        .product-grid h2 {
-            font-size: 2em;
-            margin-bottom: 20px;
+        /* Contenido del pop-up de bienvenida (imagen y botón) */
+        #welcome-popup-content {
+            background-color: #2c2c2c;
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
             text-align: center;
-            color: #333;
-        }
-
-        .products-container { /* Contenedor de creaciones */
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .product-card { /* Tarjeta de creación */
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 15px;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
+            max-width: 90%;
+            max-height: 90%;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: center;
+            align-items: center;
         }
 
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-        }
-
-        .product-card img {
+        /* Imagen dentro del pop-up de bienvenida */
+        #welcome-image {
             max-width: 100%;
-            height: 180px; /* Altura fija para las imágenes */
-            object-fit: contain; /* Para que la imagen se ajuste sin cortarse */
-            margin-bottom: 10px;
-            align-self: center;
-            background-color: #f8f8f8; /* Un fondo claro para imágenes transparentes */
-            border-radius: 4px;
+            max-height: 70vh;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            object-fit: contain;
         }
 
-        .product-card h3 {
-            font-size: 1.1em;
-            margin-bottom: 5px;
-            height: 2.8em;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            color: #007185;
-        }
-
-        .product-card h3:hover {
-            color: #c45500;
-            text-decoration: underline;
-            cursor: pointer;
-        }
-
-        .product-card .artist { /* Nuevo estilo para el artista */
-            font-size: 0.9em;
-            color: #555;
-            margin-bottom: 10px;
-        }
-
-        .product-card .add-to-cart-btn { /* Ahora "Ver Detalle" */
-            background-color: #3b73b2; /* Color azul */
-            color: #fff;
-            padding: 8px 15px;
+        /* Botón "Aceptar" del pop-up de bienvenida */
+        #welcome-btn {
+            background-color: #007bff;
+            color: white;
             border: none;
-            border-radius: 4px;
+            padding: 12px 25px;
+            border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.2s;
-            width: 100%;
-            box-sizing: border-box;
-            margin-top: auto; /* Empuja el botón hacia abajo */
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: background-color 0.3s;
         }
 
-        .product-card .add-to-cart-btn:hover {
-            background-color: #2a5a8e; /* Azul más oscuro al pasar el ratón */
+        #welcome-btn:hover {
+            background-color: #0056b3;
         }
-
-        .ad-banner {
+        
+        /* Estilos del pop-up de producto (cuando se hace clic en un cubo) */
+        #product-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #2c2c2c;
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            display: none;
             text-align: center;
-            margin-bottom: 30px;
+            max-width: 400px;
+            border: 2px solid #5a5a5a;
         }
 
-        .ad-banner img {
-            max-width: 100%;
+        #popup-image {
+            width: 100%;
+            max-width: 200px;
             height: auto;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+            border: 1px solid #777;
         }
 
-        /* Pie de página */
-        .footer {
-            background-color: #232f3e;
-            color: #ddd;
-            padding: 40px 20px;
-            font-size: 0.9em;
+        #popup-title {
+            font-size: 1.5rem;
+            margin: 0 0 10px;
+            font-weight: bold;
         }
 
-        .footer-links {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            margin-bottom: 30px;
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
+        #popup-description {
+            font-size: 1rem;
+            margin-bottom: 20px;
         }
 
-        .footer-links div {
-            margin: 15px;
-            min-width: 150px;
+        #popup-link {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
         }
 
-        .footer-links h3 {
-            color: #fff;
-            margin-bottom: 10px;
-            font-size: 1.1em;
+        #popup-link:hover {
+            background-color: #0056b3;
         }
 
-        .footer-links ul {
-            list-style: none;
-            padding: 0;
+        #close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
         }
 
-        .footer-links ul li {
-            margin-bottom: 8px;
+        .popup-close-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            margin-top: 15px;
         }
 
-        .footer-links ul li a {
-            color: #ddd;
-            transition: color 0.2s;
+        .popup-close-btn:hover {
+            background-color: #c82333;
         }
 
-        .footer-links ul li a:hover {
-            color: #fff;
-            text-decoration: underline;
+        /* Estilos del pop-up de información (Acerca de, Contacto, etc.) */
+        #info-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #2c2c2c;
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            z-index: 101;
+            display: none;
+            max-width: 500px;
+            text-align: left;
+            border: 2px solid #5a5a5a;
         }
 
-        .footer-bottom {
+        #info-popup-title {
+            font-size: 1.5rem;
+            margin: 0 0 15px;
+            font-weight: bold;
             text-align: center;
-            border-top: 1px solid #3a4553;
-            padding-top: 20px;
-            color: #aaa;
-            font-size: 0.85em;
         }
 
-        /* Ajustes Responsivos */
-        @media (max-width: 900px) {
-            .navbar {
-                justify-content: center;
-            }
-            .nav-search {
-                order: 3;
-                width: 100%;
-                margin-top: 10px;
-                margin-left: 0;
-                margin-right: 0;
-            }
-            .nav-left, .nav-right {
-                margin-bottom: 0;
-            }
-            .nav-secondary ul {
-                justify-content: center;
-            }
-            .hero-section {
-                padding: 60px 15px;
-            }
-            .hero-section h1 {
-                font-size: 2.5em;
-            }
+        #info-popup-content {
+            font-size: 1rem;
+            line-height: 1.5;
+            max-height: 70vh;
+            overflow-y: auto;
+            padding-right: 15px;
         }
 
-        @media (max-width: 600px) {
-            .navbar {
-                padding: 10px 15px;
-            }
-            .logo {
-                font-size: 20px;
-                margin-right: 10px;
-            }
-            .nav-right {
-                gap: 15px;
-            }
-            .hero-section h1 {
-                font-size: 2em;
-            }
-            .hero-section p {
-                font-size: 1em;
-            }
-            .product-grid h2 {
-                font-size: 1.7em;
-            }
-            .footer-links {
-                justify-content: flex-start;
-                padding-left: 10px;
-                padding-right: 10px;
-            }
-            .footer-links div {
-                min-width: unset;
-                flex-basis: 45%;
-            }
-            .footer {
-                padding: 30px 15px;
-            }
+        #close-info-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
         }
 
-        @media (max-width: 400px) {
-            .nav-right {
-                flex-direction: column;
-                align-items: flex-end;
-                gap: 5px;
-            }
-            .nav-right a {
-                padding: 3px 5px;
-            }
-            .nav-secondary ul {
-                gap: 10px;
-            }
-            .footer-links div {
-                flex-basis: 100%;
-            }
+        /* --- Estilos de los Botones de Control --- */
+
+        /* Contenedor principal de los botones de movimiento */
+        #controls-container {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            display: grid;
+            grid-template-areas:
+                ". up ."
+                "left . right"
+                ". down .";
+            gap: 10px;
+            z-index: 99;
+        }
+
+        /* Estilo común para todos los botones de control */
+        .control-button {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(50, 50, 50, 0.7);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.2s;
+        }
+
+        .control-button:active {
+            background-color: rgba(100, 100, 100, 0.9);
+        }
+
+        /* Posicionamiento de los botones en la rejilla */
+        #up-btn { grid-area: up; }
+        #left-btn { grid-area: left; }
+        #right-btn { grid-area: right; }
+        #down-btn { grid-area: down; }
+
+        /* Contenedor de los botones de opciones y velocidad */
+        #top-buttons-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+            z-index: 99;
+        }
+
+        /* Botón de velocidad, cambia de color al activarse */
+        #speed-button {
+            font-size: 36px;
+        }
+
+        #speed-button.active {
+            background-color: #007bff;
+            color: yellow;
+        }
+
+        /* Botón del menú de opciones */
+        #options-button {
+            font-size: 36px;
+            position: relative;
+        }
+        
+        /* Menú desplegable de opciones */
+        #options-menu {
+            display: none;
+            background-color: rgba(50, 50, 50, 0.9);
+            border-radius: 10px;
+            padding: 10px;
+            width: 200px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            flex-direction: column;
+            gap: 5px;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+        }
+
+        .menu-item {
+            position: relative;
+            background-color: #3e3e3e;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-align: center;
+        }
+
+        .menu-item:hover {
+            background-color: #555;
+        }
+        
+        /* Estilos de la barra de progreso */
+        .progress-bar-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .menu-item .progress-bar-container {
+            border-radius: 5-px;
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+
+        .progress-bar {
+            width: 0;
+            height: 100%;
+            background-color: #007bff;
+            transition: width 0.3s linear;
+        }
+
+        .progress-bar.loading {
+            animation: fill-bar 0.3s linear forwards;
+        }
+
+        @keyframes fill-bar {
+            from { width: 0; }
+            to { width: 100%; }
         }
     </style>
 </head>
 <body>
-    <header class="navbar">
-        <div class="nav-left">
-            <a href="#" class="logo">Dibujos xxx</a>
-            <div class="location-picker">
-                <i class="fas fa-palette"></i> <span>Desde</span>
-                <b>Guatemala</b>
-            </div>
-        </div>
-        <div class="nav-search">
-            <input type="text" placeholder="Buscar creaciones...">
-            <button><i class="fas fa-search"></i></button>
-        </div>
-        <div class="nav-right">
-            <a href="#">Hola, Iniciar Sesión</a>
-            <a href="#">Mis Obras</a>
-            <a href="#" class="cart">
-                <i class="fas fa-eye"></i> <span>Vistas</span>
-                <span class="cart-count">0</span>
-            </a>
-        </div>
-    </header>
 
-    <div class="nav-secondary">
-        <ul>
-            <li><a href="#"></a></li>
-            <li><a href="#"></a></li>
-            <li><a href="#"></a></li>
-            <li><a href="#"></a></li>
-            <li><a href="#"></a></li>
-            <li><a href="#"></a></li>
-        </ul>
+    <div id="welcome-popup">
+        <div id="welcome-popup-content">
+            <img id="welcome-image" src="https://i.ibb.co/nqKW8Qft/40-sin-t-tulo-20250823193546.png" alt="Imagen de bienvenida">
+            <button id="welcome-btn">Aceptar</button>
+        </div>
+    </div>
+    
+    <div id="product-popup">
+        <button id="close-btn">&times;</button>
+        <img id="popup-image" src="" alt="Imagen del producto">
+        <h2 id="popup-title"></h2>
+        <p id="popup-description"></p>
+        <a id="popup-link" href="#" target="_blank">Ir a la página del producto</a>
+        <button class="popup-close-btn" data-target="product-popup">Aceptar</button>
     </div>
 
-    <main class="main-content">
-        <section class="hero-section">
-            <h1>¡Bienvenido a Mi Comunidad de Dibujo!</h1>
-            <p>Explora un universo de creatividad y comparte tu arte.</p>
-            <button class="shop-now-btn">Explorar Creaciones</button>
-        </section>
+    <div id="info-popup">
+        <button id="close-info-btn">&times;</button>
+        <h2 id="info-popup-title"></h2>
+        <p id="info-popup-content"></p>
+        <button class="popup-close-btn" data-target="info-popup">Aceptar</button>
+    </div>
 
-        <section class="product-grid">
-            <h2>Creaciones Destacadas</h2>
-            <div class="products-container" id="productsContainer">
+    <div id="controls-container">
+        <div class="control-button" id="up-btn">↑</div>
+        <div class="control-button" id="left-btn">←</div>
+        <div class="control-button" id="right-btn">→</div>
+        <div class="control-button" id="down-btn">↓</div>
+    </div>
+
+    <div id="top-buttons-container">
+        <div class="control-button" id="options-button">
+            ☰
+            <div class="progress-bar-container">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+        <div class="control-button" id="speed-button">⚡</div>
+        <div id="options-menu">
+            <div class="menu-item" data-info="acerca-de">
+                Acerca de nosotros
+                <div class="progress-bar-container">
+                    <div class="progress-bar"></div>
                 </div>
-        </section>
-
-        <section class="ad-banner">
-            <img src="https://via.placeholder.com/1200x200?text=Participa+en+nuestro+próximo+concurso+de+dibujo" alt="Banner de Concurso">
-        </section>
-    </main>
-
-    <footer class="footer">
-        <div class="footer-links">
-            <div>
-                <h3>Conócenos</h3>
-                <ul>
-                    <li><a href="#">Acerca de Nosotros</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Principios de la Comunidad</a></li>
-                </ul>
             </div>
-            <div>
-                <h3>Colabora con Nosotros</h3>
-                <ul>
-                    <li><a href="#">Conviértete en Moderador</a></li>
-                    <li><a href="#">Patrocina un Concurso</a></li>
-                    <li><a href="#">Publicita tu Material de Arte</a></li>
-                </ul>
+            <div class="menu-item" data-info="contacto">
+                Contacto
+                <div class="progress-bar-container">
+                    <div class="progress-bar"></div>
+                </div>
             </div>
-            <div>
-                <h3>Recursos para Artistas</h3>
-                <ul>
-                    <li><a href="#">Tutoriales Gratuitos</a></li>
-                    <li><a href="#">Herramientas Recomendadas</a></li>
-                    <li><a href="#">Eventos y Talleres</a></li>
-                </ul>
+            <div class="menu-item" data-info="politica-privacidad">
+                Política de privacidad
+                <div class="progress-bar-container">
+                    <div class="progress-bar"></div>
+                </div>
             </div>
-            <div>
-                <h3>Necesitas Ayuda</h3>
-                <ul>
-                    <li><a href="#">Tu Perfil</a></li>
-                    <li><a href="#">Tus Publicaciones</a></li>
-                    <li><a href="#">Soporte Técnico</a></li>
-                </ul>
+            <div class="menu-item" data-info="aviso-legal">
+                Aviso legal
+                <div class="progress-bar-container">
+                    <div class="progress-bar"></div>
+                </div>
+            </div>
+            <div class="menu-item" data-info="terminos">
+                Términos y condiciones
+                <div class="progress-bar-container">
+                    <div class="progress-bar"></div>
+                </div>
             </div>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2023-2025 Mi Comunidad de Dibujo, Inc. o sus afiliados</p>
-        </div>
-    </footer>
+    </div>
 
-    <script>
+    <script type="module">
+        // Importar la librería Three.js
+        import * as THREE from 'https://unpkg.com/three@0.126.0/build/three.module.js';
+
+        // SECCIÓN 1: Lógica Inicial de la Página
+        // ------------------------------------
+
+        // Lógica para mostrar y ocultar el pop-up de bienvenida
         document.addEventListener('DOMContentLoaded', () => {
-            const productsContainer = document.getElementById('productsContainer');
-            const cartCountSpan = document.querySelector('.cart-count'); // Ahora para "Vistas"
-            let interactionCount = 0; // Conteo de interacciones
+            const welcomePopup = document.getElementById('welcome-popup');
+            const welcomeBtn = document.getElementById('welcome-btn');
 
-            // Simular datos de creaciones (¡aquí puedes añadir tus enlaces de imagen!)
-            const creations = [
-                { id: 1, name: 'semi humana gata', artist: 'inmortal Dibujante', image: 'https://i.ibb.co/R4dh6jkd/124-sin-t-tulo-20250615142808.png' },
-                { id: 2, name: 'dibujo de lulili', artist: 'inmortal', image: 'https://i.ibb.co/FbGQX3Yv/58-sin-t-tulo-20250508225656.png' },
-                { id: 3, name: 'Ilustración Digital Fantasía', artist: 'Clara Creacionista', image: 'https://cdn.pixabay.com/photo/2016/11/29/05/45/art-1867175_1280.jpg' },
-                { id: 4, name: 'Mural Abstracto Geométrico', artist: 'David Artístico', image: 'https://cdn.pixabay.com/photo/2017/07/21/23/57/abstract-2527966_1280.jpg' },
-                { id: 5, name: 'Diseño de Personaje Anime', artist: 'Elena Dibujante', image: 'https://cdn.pixabay.com/photo/2017/09/27/15/43/anime-2792978_1280.jpg' },
-                { id: 6, name: 'Bodegón Óleo Realista', artist: 'Felipe Maestro', image: 'https://cdn.pixabay.com/photo/2016/09/01/10/24/paint-1635811_1280.jpg' },
-                { id: 7, name: 'Cómic: Aventura Espacial', artist: 'Gloria Narrativa', image: 'https://cdn.pixabay.com/photo/2017/03/13/11/24/art-2139626_1280.jpg' },
-                { id: 8, name: 'Arte Callejero Gráfico', artist: 'Hector Urbano', image: 'https://cdn.pixabay.com/photo/2017/01/22/19/31/street-art-1999971_1280.jpg' },
-                { id: 9, name: 'Flor en Pastel Seco', artist: 'Isabel Delicada', image: 'https://cdn.pixabay.com/photo/2016/08/04/16/27/drawing-1569420_1280.jpg' },
-                { id: 10, name: 'Boceto Rápido a Lápiz', artist: 'Juan Curioso', image: 'https://cdn.pixabay.com/photo/2014/12/28/15/07/drawing-582121_1280.jpg' },
-            ];
+            welcomeBtn.addEventListener('click', () => {
+                welcomePopup.style.display = 'none';
+            });
+        });
 
-            // Función para renderizar las creaciones
-            function renderCreations() {
-                productsContainer.innerHTML = ''; // Limpiar creaciones existentes
-                creations.forEach(creation => {
-                    const productCard = document.createElement('div');
-                    productCard.classList.add('product-card');
-                    productCard.innerHTML = `
-                        <img src="${creation.image}" alt="Obra de ${creation.name}">
-                        <h3>${creation.name}</h3>
-                        <p class="artist">Artista: ${creation.artist}</p>
-                        <button class="add-to-cart-btn" data-creation-id="${creation.id}">Ver Detalle</button>
-                    `;
-                    productsContainer.appendChild(productCard);
-                });
+        // SECCIÓN 2: Configuración del Entorno 3D (Three.js)
+        // --------------------------------------------------
+
+        // Configuración de la escena, renderizador y cámara
+        const scene = new THREE.Scene();
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.setClearColor(0xD8D8D8);
+        document.body.appendChild(renderer.domElement);
+
+        // Niebla para un efecto de profundidad
+        const fogColor = new THREE.Color(0xD8D8D8);
+        scene.fog = new THREE.Fog(fogColor, 10, 50);
+        renderer.setClearColor(fogColor);
+
+        // Contenedor para la cámara (permite rotarla y moverla fácilmente)
+        const cameraContainer = new THREE.Group();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        
+        camera.position.set(0, 5, 0);
+        cameraContainer.add(camera);
+        scene.add(cameraContainer);
+
+        // Luces para iluminar la escena
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffebcc, 0.7);
+        directionalLight.position.set(5, 5, 5);
+        directionalLight.castShadow = true;
+        directionalLight.shadow.mapSize.width = 1024;
+        directionalLight.shadow.mapSize.height = 1024;
+        directionalLight.shadow.camera.near = 0.1;
+        directionalLight.shadow.camera.far = 800;
+        directionalLight.shadow.camera.left = -15;
+        directionalLight.shadow.camera.right = 15;
+        directionalLight.shadow.camera.top = 15;
+        directionalLight.shadow.camera.bottom = -15;
+        scene.add(directionalLight);
+
+        // SECCIÓN 3: Creación de Contenido (Estantes y Productos)
+        // ------------------------------------------------------
+
+        // Material para los estantes
+        const shelfMaterial = new THREE.MeshStandardMaterial({ color: 0xA0522D });
+
+        // Dimensiones y parámetros
+        const plankWidth = 8;
+        const plankHeight = 0.15;
+        const plankDepth = 1.5;
+        const supportHeight = 6.3;
+        const supportWidth = 0.15;
+        const numShelves = 8;
+        const cubeSize = 0.8;
+        const imageHorizontalSpacing = 1.6;
+        const numCubesOnShelf = 4;
+        const totalShelfHeight = numShelves * plankHeight;
+        const remainingSpace = supportHeight - totalShelfHeight;
+        const spaceBetweenShelves = remainingSpace / (numShelves - 1);
+
+        // Lista de productos para la tienda
+        const products = [
+            { url: 'https://i.ibb.co/cXxCdgf4/61-Ydn7q-Aod-L-AC-SY606.jpg', link: 'https://amzn.to/3JsOsEV', name: 'Tracfone Moto G Play (2023) [Promoción de activación], 32 GB, Azul, Incluye 1500 min/1500 txt/1500 MB, Plan de servicio de 365 días - Smartphone prepago', description: '$ 49.99' },
+            { url: 'https://i.ibb.co/dJ7jhC79/61cti-X2qpp-L-AC-SY606.jpg', link: 'https://amzn.to/4mV9ESe', name: 'TracFone [Promoción de activación] Samsung A15 5G prepago bloqueado, 64 GB, negro - Incluye plan de 30 días de $20 en llamadas y mensajes de texto ilimitados y 4 GB de datos', description: 'precio $ 59.99 precio normal $140.33 ' },
+            { url: 'https://via.placeholder.com/80x80/0000FF/FFFFFF?text=Prod+3', link: 'https://www.google.com/search?q=producto3', name: 'Producto Tres', description: 'Un artículo versátil y muy popular entre los clientes.' },
+            { url: 'https://via.placeholder.com/80x80/FFFF00/000000?text=Prod+4', link: 'https://www.com/search?q=producto4', name: 'Producto Cuatro', description: 'La opción perfecta para quienes buscan algo especial.' },
+            { url: 'https://via.placeholder.com/80x80/FF00FF/FFFFFF?text=Prod+5', link: 'https://www.com/search?q=producto5', name: 'Producto Cinco', description: 'Un producto duradero con un diseño elegante y moderno.' },
+            { url: 'https://via.placeholder.com/80x80/00FFFF/000000?text=Prod+6', link: 'https://www.com/search?q=producto6', name: 'Producto Seis', description: 'Ideal para el uso diario y muy fácil de mantener.' },
+            { url: 'https://via.placeholder.com/80x80/800080/FFFFFF?text=Prod+7', link: 'https://www.com/search?q=producto7', name: 'Producto Siete', description: 'Este producto ofrece la mejor relación calidad-precio.' },
+            { url: 'https://via.placeholder.com/80x80/FFA500/000000?text=Prod+8', link: 'https://www.com/search?q=producto8', name: 'Producto Ocho', description: 'Una excelente adición a tu colección con grandes características.' },
+            { url: 'https://via.placeholder.com/80x80/FFA500/000000?text=Prod+8', link: 'https://www.com/search?q=producto9', name: 'Producto Nueve', description: 'Una excelente adición a tu colección con grandes características.' },
+        ];
+
+        // Objetos y variables de control
+        const textureLoader = new THREE.TextureLoader();
+        const clickableObjects = [];
+        const raycaster = new THREE.Raycaster();
+        const pointer = new THREE.Vector2();
+
+        // Mapeo del contenido para las ventanas de información
+        const infoContent = {
+            "acerca-de": {
+                title: "Acerca de Nosotros",
+                content: "ministoreDeals es un proyecto de Shiru Tech. Nos dedicamos a encontrar los mejores productos tecnológicos con los precios más competitivos. Somos un buscador de ofertas, un escaparate digital diseñado para simplificar tu experiencia de compra. Explora lo mejor del mercado en un solo lugar y ahorra tiempo y dinero."
+            },
+            "contacto": {
+                title: "Contacto",
+                content: "Puedes contactarnos a través de nuestro correo electrónico: soporteshiru@gmail.com o escribiendonos a nuestro número de atención al cliente +503 7557-3427. ¡Estamos aquí para ayudarte!"
+            },
+            "politica-privacidad": {
+                title: "Política de Privacidad",
+                content: `
+                    <h3>Política de Privacidad
+
+1. Introducción
+Bienvenido a nuestra tienda. La privacidad de nuestros visitantes es de suma importancia para nosotros. Esta política explica cómo manejamos la información en nuestro sitio web.
+
+2. Información que no Recopilamos
+Nuestro sitio web es una plataforma de exhibición y no recopila ninguna información personal de los visitantes, como nombres, direcciones de correo electrónico, direcciones IP o cualquier otro dato identificable. No utilizamos cookies de seguimiento ni herramientas de análisis para monitorizar el comportamiento de los usuarios.
+
+3. Enlaces a Sitios de Terceros (Afiliados)
+Esta tienda funciona como un escaparate. Los productos que se muestran son seleccionados manualmente de otras tiendas online, como Amazon. Cuando haces clic en un enlace de producto, serás redirigido al sitio web de un tercero. Nuestra tienda no procesa transacciones ni maneja información de pago.
+
+Una vez que abandonas nuestro sitio y accedes a una tienda de terceros, la privacidad de tu información queda sujeta a la política de privacidad de ese sitio. Te recomendamos leer sus políticas cuidadosamente antes de realizar cualquier compra.
+
+4. Cambios en la Política de Privacidad
+Nos reservamos el derecho de actualizar esta política de privacidad en cualquier momento. Cualquier cambio será publicado en esta misma página.
+
+5. Contacto
+Si tienes alguna pregunta sobre esta política de privacidad, puedes contactarnos a través de:  soporteshiru@gmail.com ,al aser uso de nuestra plataforma aseptas nuestra politica de privacidad.
+                    <p> </p>
+                    <h3> </h3>
+                    <p> </p>
+                    <h3> </h3>
+                    <p> </p>
+                `
+            },
+            "aviso-legal": {
+                title: "Aviso Legal",
+                content: `
+                    <h3> Aviso Legal y Condiciones de Uso
+
+1. Identificación del Titular
+Este sitio web es operado por Shiru Tech. Para cualquier consulta, puede contactar a través de soporteshiru@gmail.com .
+
+2. Propósito de la Plataforma
+Este sitio web es una plataforma de exhibición y curaduría de productos. Su propósito es ayudar a los usuarios a encontrar los productos más económicos disponibles en tiendas de terceros. No somos los vendedores directos de los productos mostrados.
+
+3. Enlaces de Afiliado
+Este sitio participa en programas de afiliación. Esto significa que si haces clic en un enlace de producto y realizas una compra, podríamos recibir una comisión. Esto no tiene ningún costo adicional para ti y nos ayuda a mantener la plataforma en funcionamiento.
+
+4. Limitación de Responsabilidad
+No nos hacemos responsables de la exactitud de la información del producto, la calidad, el stock o el servicio al cliente de las tiendas de terceros. La transacción y cualquier problema que surja de la compra son responsabilidad exclusiva del usuario y de la tienda online de destino. Recomendamos encarecidamente revisar las políticas y los términos de uso de los sitios de terceros antes de realizar cualquier compra.
+
+5. Propiedad Intelectual
+Todo el contenido de este sitio (textos, imágenes, gráficos, etc.), a excepción de las imágenes de productos y logos que pertenecen a sus respectivos dueños, es de nuestra propiedad y está protegido por derechos de autor. No se permite su uso sin nuestro consentimiento expreso.
+
+6. Modificaciones
+Nos reservamos el derecho de modificar el contenido y las condiciones de este aviso legal en cualquier momento.</h3>
+                    <p> </p>
+                    <h3> </h3>
+                    <p> </p>
+                `
+            },
+            "terminos": {
+                title: "Términos y Condiciones",
+                content: `
+                    <h3>Aceptación de los Términos</h3>
+                    <p>Al acceder y utilizar este servicio, usted acepta estar sujeto a los siguientes términos y condiciones. Si no está de acuerdo con alguna parte de los términos, no debe utilizar nuestros servicios.</p>
+                    <h3>Descripción del Servicio</h3>
+                    <p>Nuestro servicio ofrece una experiencia de compra en un entorno 3D. Los productos mostrados pueden variar en apariencia real. Hacemos lo posible por asegurar la precisión, pero no garantizamos la exactitud de los colores ni las texturas.</p>
+                    <h3>Modificaciones del Servicio</h3>
+                    <p>Nos reservamos el derecho de modificar o discontinuar el servicio (o cualquier parte de él) sin previo aviso en cualquier momento. No seremos responsables ante usted ni ante ningún tercero por cualquier modificación, suspensión o interrupción del servicio.</p>
+                `
             }
+        };
 
-            // Función para manejar la interacción (simulando "Ver Detalle")
-            function handleInteraction(creationId) {
-                interactionCount++;
-                cartCountSpan.textContent = interactionCount;
-                console.log(`¡Detalle de la creación ${creationId} visto! Total de vistas: ${interactionCount}`);
-                alert(`¡Has visto el detalle de la obra "${creations.find(c => c.id == creationId).name}"! Imagina que aquí verías más info.`);
-            }
+        // Bucle para crear los estantes y productos de la tienda
+        let productIndex = 0;
+        const allShelves = [];
+        const numRows = 3;
+        const numColumns = 167;
+        const rowSpacing = plankWidth * 2;
+        const columnSpacing = -plankDepth * 3;
 
-            // Delegación de eventos para los botones "Ver Detalle"
-            productsContainer.addEventListener('click', (event) => {
-                if (event.target.classList.contains('add-to-cart-btn')) {
-                    const creationId = event.target.dataset.creationId;
-                    handleInteraction(creationId);
-                }
-                // También puedes hacer que al hacer clic en el título o la imagen se vea el detalle
-                if (event.target.tagName === 'IMG' || event.target.tagName === 'H3') {
-                     // Busca el ancestro más cercano que sea un product-card
-                    const card = event.target.closest('.product-card');
-                    if (card) {
-                        const button = card.querySelector('.add-to-cart-btn');
-                        if (button) {
-                            handleInteraction(button.dataset.creationId);
+        for (let row = 0; row < numRows; row++) {
+            for (let col = 0; col < numColumns; col++) {
+                const shelfGroup = new THREE.Group();
+                shelfGroup.position.x = (row - (numRows - 1) / 2) * rowSpacing;
+                shelfGroup.position.z = col * columnSpacing;
+
+                const leftSupport = new THREE.Mesh(new THREE.BoxGeometry(supportWidth, supportHeight, plankDepth), shelfMaterial);
+                leftSupport.position.x = -plankWidth / 2 + supportWidth / 2;
+                leftSupport.position.y = supportHeight / 2;
+                leftSupport.castShadow = true;
+                leftSupport.receiveShadow = true;
+                shelfGroup.add(leftSupport);
+
+                const rightSupport = new THREE.Mesh(new THREE.BoxGeometry(supportWidth, supportHeight, plankDepth), shelfMaterial);
+                rightSupport.position.x = plankWidth / 2 - supportWidth / 2;
+                rightSupport.position.y = supportHeight / 2;
+                rightSupport.castShadow = true;
+                rightSupport.receiveShadow = true;
+                shelfGroup.add(rightSupport);
+
+                for (let i = 0; i < numShelves; i++) {
+                    const shelf = new THREE.Mesh(new THREE.BoxGeometry(plankWidth, plankHeight, plankDepth), shelfMaterial);
+                    shelf.position.y = supportHeight - (i * (plankHeight + spaceBetweenShelves));
+                    shelf.castShadow = true;
+                    shelf.receiveShadow = true;
+                    shelfGroup.add(shelf);
+
+                    if (i > 0) {
+                        for (let j = 0; j < numCubesOnShelf; j++) {
+                            if (productIndex < products.length) {
+                                const currentProduct = products[productIndex];
+                                const startX = -((numCubesOnShelf - 1) * imageHorizontalSpacing) / 2;
+
+                                const geometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
+                                const productCubeMaterial = new THREE.MeshStandardMaterial({ color: 0xdeb887 });
+                                const materials = [
+                                    productCubeMaterial,
+                                    productCubeMaterial,
+                                    productCubeMaterial,
+                                    productCubeMaterial,
+                                    productCubeMaterial.clone(),
+                                    productCubeMaterial
+                                ];
+
+                                const productCube = new THREE.Mesh(geometry, materials);
+
+                                productCube.position.set(
+                                    startX + j * imageHorizontalSpacing,
+                                    shelf.position.y + plankHeight / 2 + cubeSize / 2,
+                                    -plankDepth / 2 + cubeSize / 2
+                                );
+                                productCube.userData = { product: currentProduct };
+                                clickableObjects.push(productCube);
+                                shelfGroup.add(productCube);
+
+                                textureLoader.load(currentProduct.url, (texture) => {
+                                    productCube.material[4].map = texture;
+                                    productCube.material[4].needsUpdate = true;
+                                    productCube.material[4].color = new THREE.Color(0xffffff);
+                                });
+
+                                productIndex++;
+                            }
                         }
                     }
                 }
-            });
 
+                const backBoardWidth = plankWidth + supportWidth;
+                const backBoardHeight = supportHeight;
+                const backBoardDepth = 0.1;
+                const backBoard = new THREE.Mesh(new THREE.BoxGeometry(backBoardWidth, backBoardHeight, backBoardDepth), shelfMaterial);
+                backBoard.position.z = -plankDepth / 2 - backBoardDepth / 2;
+                backBoard.position.y = supportHeight / 2;
+                backBoard.receiveShadow = true;
+                backBoard.castShadow = true;
+                shelfGroup.add(backBoard);
 
-            // Renderizado inicial de las creaciones al cargar la página
-            renderCreations();
+                scene.add(shelfGroup);
+                allShelves.push(shelfGroup);
+            }
+        }
 
-            // Ejemplo de elemento interactivo simple: botón de la sección hero
-            const shopNowBtn = document.querySelector('.shop-now-btn');
-            if (shopNowBtn) {
-                shopNowBtn.addEventListener('click', () => {
-                    alert('¡Explorando la galería de arte!');
-                    // En una aplicación real, navegarías a una sección específica
-                    // window.location.href = '#product-grid';
-                });
+        // Creación del suelo
+        const groundSize = 5000;
+        const groundGeometry = new THREE.PlaneGeometry(groundSize, groundSize);
+        const groundMaterial = new THREE.MeshStandardMaterial({ color: 0xC1C9D1, side: THREE.DoubleSide });
+        const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+        ground.rotation.x = -Math.PI / 2;
+        ground.position.y = -0.1;
+        ground.receiveShadow = false;
+        scene.add(ground);
+
+        // SECCIÓN 4: Control de Movimiento y Cámara
+        // ----------------------------------------
+
+        let isDragging = false;
+        let lastClientX, lastClientY;
+        const rotationSpeed = 0.005;
+        const moveState = {
+            forward: false,
+            backward: false,
+            left: false,
+            right: false
+        };
+        const velocity = new THREE.Vector3();
+        const direction = new THREE.Vector3();
+        let currentSpeed = 5.0;
+        const groundY = 0.0;
+        let prevTime = performance.now();
+
+        // Función para verificar si el clic fue en un elemento de la interfaz de usuario
+        function isUIElement(target) {
+            return target.closest('#welcome-popup') || target.closest('#product-popup') || target.closest('#info-popup') || target.closest('#controls-container') || target.closest('#top-buttons-container');
+        }
+
+        // Lógica para el movimiento y rotación con el mouse/touch
+        function onPointerDown(e) {
+            if (isUIElement(e.target)) return;
+            e.preventDefault();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            isDragging = true;
+            lastClientX = clientX;
+            lastClientY = clientY;
+        }
+
+        function onPointerMove(e) {
+            if (!isDragging || isUIElement(e.target)) return;
+            e.preventDefault();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            const deltaX = clientX - lastClientX;
+            const deltaY = clientY - lastClientY;
+            cameraContainer.rotation.y -= deltaX * rotationSpeed;
+            camera.rotation.x -= deltaY * rotationSpeed;
+            camera.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, camera.rotation.x));
+            lastClientX = clientX;
+            lastClientY = clientY;
+        }
+
+        function handlePointerUp(e) {
+            isDragging = false;
+            const isUIClick = isUIElement(e.target);
+            const isCanvasClick = e.target.tagName === 'CANVAS';
+
+            if (!isUIClick && isCanvasClick) {
+                e.preventDefault();
+                const clientX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+                const clientY = e.changedTouches ? e.changedTouches[0].clientY : e.clientY;
+
+                pointer.x = (clientX / window.innerWidth) * 2 - 1;
+                pointer.y = -(clientY / window.innerHeight) * 2 + 1;
+                raycaster.setFromCamera(pointer, camera);
+                const intersects = raycaster.intersectObjects(clickableObjects);
+
+                if (intersects.length > 0) {
+                    const clickedObject = intersects[0].object;
+                    const productData = clickedObject.userData.product;
+                    const productPopup = document.getElementById('product-popup');
+                    document.getElementById('popup-image').src = productData.url;
+                    document.getElementById('popup-title').textContent = productData.name;
+                    document.getElementById('popup-description').textContent = productData.description;
+                    document.getElementById('popup-link').href = productData.link;
+                    productPopup.style.display = 'block';
+                    document.getElementById('options-menu').style.display = 'none';
+                    document.getElementById('info-popup').style.display = 'none';
+                    return;
+                }
             }
 
-            // Ejemplo de funcionalidad de búsqueda (muy básica)
-            const searchInput = document.querySelector('.nav-search input');
-            const searchButton = document.querySelector('.nav-search button');
+            if (!isUIClick) {
+                document.getElementById('product-popup').style.display = 'none';
+                document.getElementById('info-popup').style.display = 'none';
+                document.getElementById('options-menu').style.display = 'none';
+            }
+        }
 
-            searchButton.addEventListener('click', () => {
-                const searchTerm = searchInput.value.trim().toLowerCase();
-                if (searchTerm) {
-                    alert(`¡Buscando creaciones con: "${searchTerm}"!`);
-                    // En una aplicación real, filtrarías las creaciones o harías una llamada a una API
-                } else {
-                    alert('Por favor, ingresa un término de búsqueda.');
-                }
+        // Asignación de eventos de mouse y touch
+        document.addEventListener('mousedown', onPointerDown);
+        document.addEventListener('touchstart', onPointerDown, { passive: false });
+        document.addEventListener('mousemove', onPointerMove);
+        document.addEventListener('touchmove', onPointerMove, { passive: false });
+        document.addEventListener('mouseup', handlePointerUp);
+        document.addEventListener('touchend', handlePointerUp, { passive: false });
+
+        // Eventos para cerrar los pop-ups con el botón
+        document.getElementById('close-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.getElementById('product-popup').style.display = 'none';
+        });
+        document.getElementById('close-info-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.getElementById('info-popup').style.display = 'none';
+        });
+        document.querySelectorAll('.popup-close-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const targetId = button.getAttribute('data-target');
+                document.getElementById(targetId).style.display = 'none';
             });
+            button.addEventListener('touchstart', (e) => {
+                e.stopPropagation();
+                const targetId = button.getAttribute('data-target');
+                document.getElementById(targetId).style.display = 'none';
+            });
+        });
 
-            searchInput.addEventListener('keypress', (event) => {
-                if (event.key === 'Enter') {
-                    searchButton.click(); // Disparar clic del botón de búsqueda al presionar Enter
+        // Lógica de los botones con "hold" y barra de progreso
+        const holdDuration = 300;
+        let holdTimer;
+        let isHolding = false;
+        let currentProgressBar = null;
+
+        function startHoldTimer(event) {
+            event.stopPropagation();
+            if (isHolding) {
+                clearTimeout(holdTimer);
+                if (currentProgressBar) {
+                    currentProgressBar.classList.remove('loading');
+                    currentProgressBar.parentNode.style.display = 'none';
+                }
+            }
+            isHolding = true;
+            const target = event.currentTarget;
+            const progressBarContainer = target.querySelector('.progress-bar-container');
+            const progressBar = target.querySelector('.progress-bar');
+            if (progressBarContainer && progressBar) {
+                currentProgressBar = progressBar;
+                progressBarContainer.style.display = 'block';
+                progressBar.classList.add('loading');
+                holdTimer = setTimeout(() => {
+                    if (isHolding) {
+                        if (target.id === 'options-button') {
+                            document.getElementById('options-menu').style.display = 'flex';
+                        } else if (target.classList.contains('menu-item')) {
+                            const infoKey = target.getAttribute('data-info');
+                            const data = infoContent[infoKey];
+                            document.getElementById('info-popup-title').textContent = data.title;
+                            document.getElementById('info-popup-content').innerHTML = data.content;
+                            document.getElementById('info-popup').style.display = 'block';
+                            document.getElementById('options-menu').style.display = 'none';
+                        }
+                    }
+                    endHoldTimer();
+                }, holdDuration);
+            }
+        }
+
+        function endHoldTimer() {
+            isHolding = false;
+            clearTimeout(holdTimer);
+            if (currentProgressBar) {
+                currentProgressBar.classList.remove('loading');
+                currentProgressBar.parentNode.style.display = 'none';
+                currentProgressBar.style.width = '0%';
+                currentProgressBar = null;
+            }
+        }
+
+        // Eventos para los botones de opciones y menú
+        const optionsButton = document.getElementById('options-button');
+        optionsButton.addEventListener('mousedown', startHoldTimer);
+        optionsButton.addEventListener('mouseup', endHoldTimer);
+        optionsButton.addEventListener('mouseleave', endHoldTimer);
+        optionsButton.addEventListener('touchstart', startHoldTimer, { passive: false });
+        optionsButton.addEventListener('touchend', endHoldTimer);
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('mousedown', startHoldTimer);
+            item.addEventListener('mouseup', endHoldTimer);
+            item.addEventListener('mouseleave', endHoldTimer);
+            item.addEventListener('touchstart', startHoldTimer, { passive: false });
+            item.addEventListener('touchend', endHoldTimer);
+            item.addEventListener('click', (e) => {
+                if (!isHolding) {
+                    e.stopPropagation();
                 }
             });
         });
+
+        // Eventos para los botones de movimiento
+        document.getElementById('up-btn').addEventListener('mousedown', () => { moveState.forward = true; });
+        document.getElementById('up-btn').addEventListener('mouseup', () => { moveState.forward = false; });
+        document.getElementById('up-btn').addEventListener('touchstart', (e) => { e.preventDefault(); moveState.forward = true; });
+        document.getElementById('up-btn').addEventListener('touchend', (e) => { e.preventDefault(); moveState.forward = false; });
+        document.getElementById('down-btn').addEventListener('mousedown', () => { moveState.backward = true; });
+        document.getElementById('down-btn').addEventListener('mouseup', () => { moveState.backward = false; });
+        document.getElementById('down-btn').addEventListener('touchstart', (e) => { e.preventDefault(); moveState.backward = true; });
+        document.getElementById('down-btn').addEventListener('touchend', (e) => { e.preventDefault(); moveState.backward = false; });
+        document.getElementById('left-btn').addEventListener('mousedown', () => { moveState.left = true; });
+        document.getElementById('left-btn').addEventListener('mouseup', () => { moveState.left = false; });
+        document.getElementById('left-btn').addEventListener('touchstart', (e) => { e.preventDefault(); moveState.left = true; });
+        document.getElementById('left-btn').addEventListener('touchend', (e) => { e.preventDefault(); moveState.left = false; });
+        document.getElementById('right-btn').addEventListener('mousedown', () => { moveState.right = true; });
+        document.getElementById('right-btn').addEventListener('mouseup', () => { moveState.right = false; });
+        document.getElementById('right-btn').addEventListener('touchstart', (e) => { e.preventDefault(); moveState.right = true; });
+        document.getElementById('right-btn').addEventListener('touchend', (e) => { e.preventDefault(); moveState.right = false; });
+
+        // Lógica para cambiar la velocidad
+        const speedBtn = document.getElementById('speed-button');
+        function toggleSpeed() {
+            if (currentSpeed === 5.0) {
+                currentSpeed = 10.0;
+                speedBtn.classList.add('active');
+            } else {
+                currentSpeed = 5.0;
+                speedBtn.classList.remove('active');
+            }
+        }
+        speedBtn.addEventListener('mousedown', (e) => { e.preventDefault(); toggleSpeed(); });
+        speedBtn.addEventListener('touchstart', (e) => { e.preventDefault(); toggleSpeed(); });
+
+        // Posición inicial de la cámara
+        cameraContainer.position.set(0, 0, 20);
+
+        // SECCIÓN 5: Bucle Principal de Renderizado (Animate)
+        // ---------------------------------------------------
+
+        // Ajuste de la pantalla al cambiar el tamaño de la ventana
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        window.addEventListener('resize', onWindowResize);
+
+        // Función principal que se ejecuta en cada frame
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const time = performance.now();
+            const delta = (time - prevTime) / 1000;
+
+            // Optimización: solo renderizar los estantes visibles
+            updateVisibility();
+
+            // Lógica de movimiento
+            direction.set(0, 0, 0);
+            if (moveState.forward) direction.z -= 1;
+            if (moveState.backward) direction.z += 1;
+            if (moveState.left) direction.x -= 1;
+            if (moveState.right) direction.x += 1;
+
+            if (direction.length() > 0) {
+                direction.normalize();
+                const rotationMatrix = new THREE.Matrix4();
+                rotationMatrix.extractRotation(cameraContainer.matrix);
+                cameraContainer.position.add(direction.applyMatrix4(rotationMatrix).multiplyScalar(currentSpeed * delta));
+            }
+
+            cameraContainer.position.y += velocity.y * delta;
+            if (cameraContainer.position.y > groundY + 0) {
+                velocity.y -= 9.8 * delta;
+            } else {
+                velocity.y = 0;
+                cameraContainer.position.y = groundY;
+            }
+
+            prevTime = time;
+            renderer.render(scene, camera);
+        }
+
+        // Función para controlar la visibilidad de los estantes
+        function updateVisibility() {
+            const renderDistance = 60;
+            const cameraPosition = cameraContainer.position;
+
+            allShelves.forEach(shelf => {
+                const distance = shelf.position.distanceTo(cameraPosition);
+                shelf.visible = distance < renderDistance;
+            });
+        }
+
+        // ¡Inicia la animación!
+        animate();
     </script>
 </body>
 </html>
